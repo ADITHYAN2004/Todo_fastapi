@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from todo.database import Base
-from datetime import datetime
+
 
 class User(Base):
     __tablename__ = "users"
