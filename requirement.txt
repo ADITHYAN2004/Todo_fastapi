@@ -5,3 +5,5 @@ python-dotenv
 psycopg2-binary
 python-jose
 passlib
+pydantic[email]
+python-multipart

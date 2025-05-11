@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from todo.routes import user, todo
-from todo import models, database
+from todo.routes import user, todo 
+from . import models, database
 
 models.Base.metadata.create_all(bind=database.engine)
 
