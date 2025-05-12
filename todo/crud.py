@@ -23,17 +23,53 @@ def create_todo(db: Session, todo: schemas.TodoCreate, user_id: int):
 def get_user_todos(db: Session, user_id: int):
     return db.query(models.Todo).filter(models.Todo.owner_id == user_id).all()
 
-def mark_todo_complete(db: Session, todo_id: int):
-    todo = db.query(models.Todo).get(todo_id)
+def mark_todo_complete(db: Session, todo_id: int, user_id: int):
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id, models.Todo.owner_id == user_id).first()
     if todo:
         todo.completed = True
         db.commit()
-    return todo
+        return todo
+    return None
 
-def delete_todo(db: Session, todo_id: int):
-    todo = db.query(models.Todo).get(todo_id)
+
+def delete_todo(db: Session, todo_id: int, user_id: int):
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id, models.Todo.owner_id == user_id).first()
     if todo:
         db.delete(todo)
         db.commit()
-    return todo
+        return todo
+    return None
 
+
+def get_user_todos_grouped(db: Session, user_id: int):
+    now = datetime.utcnow()
+    todos = db.query(models.Todo).filter(models.Todo.owner_id == user_id).all()
+
+    completed = []
+    pending = []
+    elapsed = []
+
+    for todo in todos:
+        if todo.completed:
+            completed.append(todo)
+        elif todo.time_to_complete < now:
+            elapsed.append(todo)
+        else:
+            pending.append(todo)
+
+    return {
+        "completed": completed,
+        "to_be_done": pending,
+        "elapsed": elapsed
+    }
+
+def update_todo(db: Session, todo_id: int, user_id: int, updated_data: schemas.TodoCreate):
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id, models.Todo.owner_id == user_id).first()
+    if not todo:
+        return None
+    todo.title = updated_data.title
+    todo.description = updated_data.description
+    todo.time_to_complete = updated_data.time_to_complete
+    db.commit()
+    db.refresh(todo)
+    return todo
