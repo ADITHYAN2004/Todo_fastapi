@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
 from todo import models, schemas, auth
+from .utils import hashing
 from datetime import datetime
 
 def create_user(db: Session, user: schemas.UserCreate):
-    hashed_password = auth.get_password_hash(user.password)
+    hashed_password = hashing.get_password_hash(user.password)
     db_user = models.User(username=user.username, email=user.email, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
