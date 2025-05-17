@@ -1,26 +1,25 @@
-from pydantic import BaseModel, EmailStr
+from sqlmodel import SQLModel
+from typing import  List
 from datetime import datetime
-
-
-class UserCreate(BaseModel):
+class UserCreate(SQLModel):
     username: str
-    email: EmailStr
+    email: str
     password: str
 
-class ShowUser(BaseModel):
+class ShowUser(SQLModel):
     id: int
     username: str
-    email: EmailStr
+    email: str
 
     class Config:
-        orm_mode = True
+        from_attribute = True
 
-class TodoCreate(BaseModel):
+class TodoCreate(SQLModel):
     title: str
     description: str
     time_to_complete: datetime
 
-class ShowTodo(BaseModel):
+class ShowTodo(SQLModel):
     id: int
     title: str
     description: str
@@ -28,9 +27,9 @@ class ShowTodo(BaseModel):
     completed: bool
 
     class Config:
-        orm_mode = True
+        from_attribute = True
 
-class Login(BaseModel):
+class Login(SQLModel):
     username: str
     password: str
 

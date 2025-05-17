@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from todo import schemas, crud, database, auth
-from todo.models import User, Todo
+from todo import schemas, crud, auth
+from ..db import database
+from  ..db.models import User, Todo
 from datetime import datetime
 from typing import List, Dict
 
@@ -22,7 +23,8 @@ def get_todos(
     db: Session = Depends(database.get_db),
     current_user: User = Depends(auth.get_current_user)
 ):
-    return crud.get_user_todos(db, user_id=current_user.id)
+    
+    return crud.get_todos(db, user_id=current_user.id)
 
 @router.patch("/{todo_id}/complete")
 def complete(

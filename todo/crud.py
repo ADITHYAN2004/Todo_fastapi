@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from todo import models, schemas, auth
+from .db import models
+from todo import schemas, auth
 from .utils import hashing
 from datetime import datetime
 
@@ -21,7 +22,7 @@ def create_todo(db: Session, todo: schemas.TodoCreate, user_id: int):
     db.refresh(db_todo)
     return db_todo
 
-def get_user_todos(db: Session, user_id: int):
+def get_todos(db: Session, user_id: int):
     return db.query(models.Todo).filter(models.Todo.owner_id == user_id).all()
 
 def mark_todo_complete(db: Session, todo_id: int, user_id: int):
@@ -40,6 +41,7 @@ def delete_todo(db: Session, todo_id: int, user_id: int):
         db.commit()
         return todo
     return None
+
 
 
 def get_user_todos_grouped(db: Session, user_id: int):

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from todo import schemas, crud, auth, database 
+from todo import schemas, crud, auth
+from ..db import database
 from ..utils import hashing
 from fastapi.security import OAuth2PasswordRequestForm
 
