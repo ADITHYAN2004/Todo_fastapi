@@ -30,6 +30,7 @@ def mark_todo_complete(db: Session, todo_id: int, user_id: int):
     if todo:
         todo.completed = True
         db.commit()
+        db.refresh(todo) 
         return todo
     return None
 
